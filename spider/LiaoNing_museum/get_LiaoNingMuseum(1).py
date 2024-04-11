@@ -26,7 +26,7 @@ button=driver.find_element(By.CLASS_NAME,"btn-next")
 # inner_button.send_keys(873)
 # button.click()
 
-for i in range(871,1747):
+for i in range(0,1747):
     page=page+1
     timestamp = driver.execute_script("return window.performance.timing.loadEventEnd;")/1000
     _url="https://www.lnmuseum.com.cn/singleMuseum/szwwkt/list?_t="+str(timestamp)+"&year=&category=&name=&currentPage="+str(page)+"&size=15"

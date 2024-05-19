@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ujcms.cms.core.mapper.ChannelMapper"><resultMap id="BaseResultMap" type="com.ujcms.cms.core.domain.Channel">
+    <id column="id_" jdbcType="INTEGER" property="id" />
+    <result column="site_id_" jdbcType="INTEGER" property="siteId" />
+    <result column="parent_id_" jdbcType="INTEGER" property="parentId" />
+    <result column="channel_model_id_" jdbcType="INTEGER" property="channelModelId" />
+    <result column="article_model_id_" jdbcType="INTEGER" property="articleModelId" />
+    <result column="name_" jdbcType="VARCHAR" property="name" />
+    <result column="alias_" jdbcType="VARCHAR" property="alias" />
+    <result column="nav_" jdbcType="CHAR" property="nav" />
+    <result column="process_key_" jdbcType="VARCHAR" property="processKey" />
+    <result column="type_" jdbcType="SMALLINT" property="type" />
+    <result column="depth_" jdbcType="SMALLINT" property="depth" />
+    <result column="order_" jdbcType="INTEGER" property="order" />
+    <result column="target_blank_" jdbcType="CHAR" property="targetBlank" />
+    <result column="image_" jdbcType="VARCHAR" property="image" />
+    <result column="link_url_" jdbcType="VARCHAR" property="linkUrl" />
+    <result column="article_template_" jdbcType="VARCHAR" property="articleTemplate" />
+    <result column="channel_template_" jdbcType="VARCHAR" property="channelTemplate" />
+    <result column="performance_type_id_" jdbcType="INTEGER" property="performanceTypeId" />
+    <result column="page_size_" jdbcType="SMALLINT" property="pageSize" />
+    <result column="order_desc_" jdbcType="CHAR" property="orderDesc" />
+    <result column="allow_comment_" jdbcType="CHAR" property="allowComment" />
+    <result column="allow_contribute_" jdbcType="CHAR" property="allowContribute" />
+    <result column="allow_search_" jdbcType="CHAR" property="allowSearch" />
+    <result column="created_" jdbcType="TIMESTAMP" property="created" />
+    <result column="modified_" jdbcType="TIMESTAMP" property="modified" />
+    <result column="views_" jdbcType="BIGINT" property="views" />
+    <result column="self_views_" jdbcType="BIGINT" property="selfViews" />
+  </resultMap>
+    <cache type="com.ujcms.cms.core.domain.cache.SiteCache" />
+    <resultMap extends="BaseResultMap" id="LinkResultMap" type="com.ujcms.cms.core.domain.Channel">
+        <association column="site_id_" javaType="com.ujcms.cms.core.domain.Site" property="site" select="com.ujcms.cms.core.mapper.SiteMapper.selectRefer" />
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ParentResultMap" type="com.ujcms.cms.core.domain.Channel">
+        <association column="site_id_" javaType="com.ujcms.cms.core.domain.Site" property="site" select="com.ujcms.cms.core.mapper.SiteMapper.selectRefer" />
+        <association column="parent_id_" javaType="com.ujcms.cms.core.domain.Channel" property="parent" select="selectReferParent" />
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ReferResultMap" type="com.ujcms.cms.core.domain.Channel">
+        <association column="site_id_" javaType="com.ujcms.cms.core.domain.Site" property="site" select="com.ujcms.cms.core.mapper.SiteMapper.selectRefer" />
+        <association column="parent_id_" javaType="com.ujcms.cms.core.domain.Channel" property="parent" select="selectReferParent" />
+        <association column="article_model_id_" javaType="com.ujcms.cms.core.domain.Model" property="articleModel" select="com.ujcms.cms.core.mapper.ModelMapper.select" />
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ListResultMap" type="com.ujcms.cms.core.domain.Channel">
+        <result column="has_children_" jdbcType="CHAR" property="hasChildren" />
+        <association column="site_id_" javaType="com.ujcms.cms.core.domain.Site" property="site" select="com.ujcms.cms.core.mapper.SiteMapper.selectRefer" />
+        <association column="channel_model_id_" javaType="com.ujcms.cms.core.domain.Model" property="channelModel" select="com.ujcms.cms.core.mapper.ModelMapper.select" />
+        <association column="article_model_id_" javaType="com.ujcms.cms.core.domain.Model" property="articleModel" select="com.ujcms.cms.core.mapper.ModelMapper.select" />
+        <association column="performance_type_id_" javaType="com.ujcms.cms.core.domain.PerformanceType" property="performanceType" select="com.ujcms.cms.core.mapper.PerformanceTypeMapper.select" />
+        <collection column="id_" ofType="com.ujcms.cms.core.domain.ChannelCustom" property="customList" select="com.ujcms.cms.core.mapper.ChannelCustomMapper.listByChannelId" />
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMap" type="com.ujcms.cms.core.domain.Channel">
+        <association column="id_" javaType="com.ujcms.cms.core.domain.ChannelExt" property="ext" select="com.ujcms.cms.core.mapper.ChannelExtMapper.select" />
+        <association column="parent_id_" javaType="com.ujcms.cms.core.domain.Channel" property="parent" select="selectReferParent" />
+        <association column="site_id_" javaType="com.ujcms.cms.core.domain.Site" property="site" select="com.ujcms.cms.core.mapper.SiteMapper.selectRefer" />
+        <association column="channel_model_id_" javaType="com.ujcms.cms.core.domain.Model" property="channelModel" select="com.ujcms.cms.core.mapper.ModelMapper.select" />
+        <association column="article_model_id_" javaType="com.ujcms.cms.core.domain.Model" property="articleModel" select="com.ujcms.cms.core.mapper.ModelMapper.select" />
+        <association column="performance_type_id_" javaType="com.ujcms.cms.core.domain.PerformanceType" property="performanceType" select="com.ujcms.cms.core.mapper.PerformanceTypeMapper.select" />
+        <collection column="id_" ofType="com.ujcms.cms.core.domain.Channel" property="children" select="listChildrenLink" />
+        <collection column="id_" ofType="com.ujcms.cms.core.domain.ChannelCustom" property="customList" select="com.ujcms.cms.core.mapper.ChannelCustomMapper.listByChannelId" />
+    </resultMap>
+    <select id="findFirstByParentId" parameterType="int" resultMap="LinkResultMap">
+        select
+        <if test="_databaseId == 'sqlserver'">TOP 1</if>
+        <if test="_databaseId == 'informix' and _databaseId == 'gbase'">FIRST 1</if>
+        <include refid="Column_List" />
+        from ujcms_channel t
+        where t.parent_id_ = #{parentId,jdbcType=INTEGER}
+        <if test="_databaseId == 'oracle' and _databaseId == 'dm' and _databaseId == 'oscar'">and ROWNUM &lt;= 1</if>
+        order by t.order_, t.id_
+        <if test="_databaseId == 'h2' and _databaseId == 'db2'">FETCH FIRST 1 ROWS ONLY</if>
+        <if test="_databaseId != 'oracle' and _databaseId != 'sqlserver' and _databaseId != 'db2' and _databaseId != 'informix' and _databaseId != 'h2' and _databaseId != 'dm' and _databaseId != 'oscar'">
+            LIMIT 1
+        </if>
+    </select>
+    <select id="findBySiteIdAndAlias" resultMap="ResultMap">
+        select
+        <include refid="Column_List" />
+        from ujcms_channel t
+        where t.site_id_ = #{siteId} and t.alias_ = #{alias}
+    </select>
+    <select id="listChildrenLink" resultMap="LinkResultMap">
+        select
+        <include refid="Column_List" />
+        from ujcms_channel t
+        where t.parent_id_ = #{parentId,jdbcType=INTEGER}
+        order by t.order_, t.id_
+    </select>
+    <select id="listChildren" resultMap="LinkResultMap">
+        select
+        <include refid="Column_List" />
+        from ujcms_channel t
+        where t.parent_id_ = #{parentId,jdbcType=INTEGER}
+        order by t.order_, t.id_
+    </select>
+
+    <select id="countByCreated" resultType="int">
+        select count(*)
+        from ujcms_channel t
+        where t.site_id_ = #{siteId}
+        <if test="created != null">
+            and t.created_ &gt;= #{created}
+        </if>
+    </select>
+    <select id="selectForSitemap" resultMap="BaseResultMap">
+        select t.id_, t.alias_
+        from ujcms_channel t
+        where t.id_ = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="listByChannelForSitemap" resultMap="BaseResultMap">
+        select t.id_, t.alias_, t.type_
+        from ujcms_channel t
+        where t.site_id_ = #{siteId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteBySiteId" parameterType="int">
+        delete
+        from ujcms_channel
+        where site_id_ = #{siteId,jdbcType=INTEGER}
+    </delete>
+    <update id="updatePerformanceTypeIdToNull">
+        update ujcms_channel
+        set performance_type_id_ = null
+        where performance_type_id_ = #{performanceTypeId,jdbcType=INTEGER}
+    </update>
+    <update id="updateParentIdToNull">
+        update ujcms_channel
+        set parent_id_ = null
+        where site_id_ = #{siteId,jdbcType=INTEGER}
+    </update>
+    <update id="updateDepth">
+        update ujcms_channel
+        set depth_ = depth_ + #{depth,jdbcType=SMALLINT}
+        where id_ in (select descendant_id_ from ujcms_channel_tree where ancestor_id_ = #{id,jdbcType=INTEGER})
+    </update>
+    <select id="maxOrder" resultType="int">
+        select max(c.order_)
+        from ujcms_channel c
+        <if test="parentId != null">join ujcms_channel_tree t on c.id_ = t.descendant_id_</if>
+        where
+        <choose>
+            <when test="parentId != null">
+                t.ancestor_id_ = #{parentId,jdbcType=INTEGER}
+            </when>
+            <otherwise>
+                c.site_id_ = #{siteId}
+            </otherwise>
+        </choose>
+    </select>
+    <update id="updateOrder">
+        update ujcms_channel
+        set order_ = order_ + #{num,jdbcType=INTEGER}
+        where order_ &gt;= #{begin,jdbcType=INTEGER}
+          and order_ &lt;= #{end,jdbcType=INTEGER}
+          and site_id_ = #{siteId,jdbcType=INTEGER}
+    </update>
+    <update id="updateOrderByParentId">
+        update ujcms_channel
+        set order_ = order_ + #{num,jdbcType=INTEGER}
+        where id_ in (select t.descendant_id_
+                      from ujcms_channel_tree t
+                      where t.ancestor_id_ = #{parentId,jdbcType=INTEGER})
+    </update>
+    <sql id="selectAllSelect">
+        <if test="isQueryHasChildren">
+            , CASE WHEN exists(select * from ujcms_channel childChannel where childChannel.parent_id_ = t.id_) THEN '1' ELSE '0' END as has_children_
+        </if>
+    </sql>
+    <sql id="selectAllJoin">
+        <include refid="com.ujcms.cms.core.mapper.SeqMapper.selectAllCustomsFieldJoin">
+            <property name="customsTable" value="ujcms_channel_custom" />
+            <property name="customsId" value="channel_id_" />
+        </include>
+    </sql>
+    <sql id="selectAllWhere">
+        <include refid="com.ujcms.cms.core.mapper.SeqMapper.selectAllCustomsFieldWhere" />
+        <if test="articleRoleIds != null">
+            <choose>
+                <when test="articleRoleIds.size() &gt; 0">
+                    and t.id_ in (
+                    select role_article_.channel_id_ from ujcms_role_article role_article_
+                    where role_article_.role_id_ in
+                    <foreach close=")" collection="articleRoleIds" index="index" item="item" open="(" separator=",">
+                        #{item}
+                    </foreach>
+                    )
+                </when>
+                <!-- articleRoleIds.size() = 0 代表没有角色权限，不返回任何数据 -->
+                <otherwise>
+                    and 1=2
+                </otherwise>
+            </choose>
+        </if>
+        <if test="isOnlyParent">
+            and exists(select * from ujcms_channel childChannel where childChannel.parent_id_ = t.id_)
+        </if>
+    </sql>
+    <select id="selectAll" resultMap="ListResultMap">
+        <include refid="com.ujcms.cms.core.mapper.SeqMapper.Select_All">
+            <property name="tableName" value="ujcms_channel" />
+        </include>
+    </select>
+    <select id="selectReferParent" parameterType="int" resultMap="ParentResultMap">
+        select
+        <include refid="Column_List" />
+        from ujcms_channel t
+        where t.id_ = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="selectRefer" parameterType="int" resultMap="ReferResultMap">
+        select
+        <include refid="Column_List" />
+        from ujcms_channel t
+        where t.id_ = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="select" parameterType="int" resultMap="ResultMap">
+        select
+        <include refid="Column_List" />
+        from ujcms_channel t
+        where t.id_ = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="existsByModelId" resultType="int">
+        select case
+                   when exists(
+                           select *
+                           from ujcms_channel t
+                           where t.article_model_id_ = #{channelId}
+                              or t.channel_model_id_ = #{channelId}
+                       ) then 1
+                   else 0
+                   end as non_zero_exists
+    </select>
+    <!-- 参数可能变化很大，没必要缓存 -->
+    <select id="existsByAlias" resultType="int" useCache="false">
+        select case
+                   when exists(
+                           select *
+                           from ujcms_channel t
+                           where t.alias_ = #{alias}
+                             and t.site_id_ = #{siteId}
+                       ) then 1
+                   else 0
+                   end as non_zero_exists
+    </select>
+    <select id="existsByArticleRoleId" resultType="int" useCache="false">
+        select case
+                   when exists(
+                           select * from ujcms_role_article ra where ra.channel_id_ = #{channelId} and ra.role_id_ in
+                            <foreach close=")" collection="roleIds" index="index" item="item" open="(" separator=",">
+                                #{item}
+                            </foreach>
+                       ) then 1
+                   else 0
+                   end as non_zero_exists
+    </select>
+    <delete id="delete" parameterType="int">
+        delete
+        from ujcms_channel
+        where id_ = #{id,jdbcType=INTEGER}
+    </delete><update id="update" parameterType="com.ujcms.cms.core.domain.Channel">
+    update ujcms_channel
+    set site_id_ = #{siteId,jdbcType=INTEGER},
+      parent_id_ = #{parentId,jdbcType=INTEGER},
+      channel_model_id_ = #{channelModelId,jdbcType=INTEGER},
+      article_model_id_ = #{articleModelId,jdbcType=INTEGER},
+      name_ = #{name,jdbcType=VARCHAR},
+      alias_ = #{alias,jdbcType=VARCHAR},
+      nav_ = #{nav,jdbcType=CHAR},
+      process_key_ = #{processKey,jdbcType=VARCHAR},
+      type_ = #{type,jdbcType=SMALLINT},
+      target_blank_ = #{targetBlank,jdbcType=CHAR},
+      image_ = #{image,jdbcType=VARCHAR},
+      link_url_ = #{linkUrl,jdbcType=VARCHAR},
+      article_template_ = #{articleTemplate,jdbcType=VARCHAR},
+      channel_template_ = #{channelTemplate,jdbcType=VARCHAR},
+      performance_type_id_ = #{performanceTypeId,jdbcType=INTEGER},
+      page_size_ = #{pageSize,jdbcType=SMALLINT},
+      order_desc_ = #{orderDesc,jdbcType=CHAR},
+      allow_comment_ = #{allowComment,jdbcType=CHAR},
+      allow_contribute_ = #{allowContribute,jdbcType=CHAR},
+      allow_search_ = #{allowSearch,jdbcType=CHAR},
+      created_ = #{created,jdbcType=TIMESTAMP},
+      modified_ = #{modified,jdbcType=TIMESTAMP}
+    where id_ = #{id,jdbcType=INTEGER}
+  </update><insert id="insert" parameterType="com.ujcms.cms.core.domain.Channel">
+    insert into ujcms_channel (id_, site_id_, parent_id_, channel_model_id_, article_model_id_, name_, alias_, nav_, process_key_, type_, depth_, order_, target_blank_, image_, link_url_, article_template_, channel_template_, performance_type_id_, page_size_, order_desc_, allow_comment_, allow_contribute_, allow_search_, created_, modified_, views_, self_views_)
+    values (#{id,jdbcType=INTEGER}, #{siteId,jdbcType=INTEGER}, #{parentId,jdbcType=INTEGER}, #{channelModelId,jdbcType=INTEGER}, #{articleModelId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{alias,jdbcType=VARCHAR}, #{nav,jdbcType=CHAR}, #{processKey,jdbcType=VARCHAR}, #{type,jdbcType=SMALLINT}, #{depth,jdbcType=SMALLINT}, #{order,jdbcType=INTEGER}, #{targetBlank,jdbcType=CHAR}, #{image,jdbcType=VARCHAR}, #{linkUrl,jdbcType=VARCHAR}, #{articleTemplate,jdbcType=VARCHAR}, #{channelTemplate,jdbcType=VARCHAR}, #{performanceTypeId,jdbcType=INTEGER}, #{pageSize,jdbcType=SMALLINT}, #{orderDesc,jdbcType=CHAR}, #{allowComment,jdbcType=CHAR}, #{allowContribute,jdbcType=CHAR}, #{allowSearch,jdbcType=CHAR}, #{created,jdbcType=TIMESTAMP}, #{modified,jdbcType=TIMESTAMP}, #{views,jdbcType=BIGINT}, #{selfViews,jdbcType=BIGINT})
+  </insert><sql id="Column_List">
+    t.id_, t.site_id_, t.parent_id_, t.channel_model_id_, t.article_model_id_, t.name_, t.alias_, t.nav_, t.process_key_, t.type_, t.depth_, t.order_, t.target_blank_, t.image_, t.link_url_, t.article_template_, t.channel_template_, t.performance_type_id_, t.page_size_, t.order_desc_, t.allow_comment_, t.allow_contribute_, t.allow_search_, t.created_, t.modified_, t.views_, t.self_views_
+  </sql></mapper>

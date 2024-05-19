@@ -1,0 +1,25 @@
+[#escape x as (x)!?html]
+  <link rel="stylesheet" href="${files}/vendor/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="${files}/vendor/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="${files}/css/main.css">
+  <style>
+    body {
+      position: relative;
+      background-image: url('https://www.dpm.org.cn/Uploads/Picture/2024/04/29/s662f58b6e91dc.jpg'); /* 替换为您的图片路径 */
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+    
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: rgb(247, 255, 213); /* 白色覆盖层，50% 透明度 */
+      z-index: -1;
+    }
+    </style> 
+[/#escape]

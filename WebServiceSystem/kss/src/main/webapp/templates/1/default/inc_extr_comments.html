@@ -1,0 +1,255 @@
+[#escape x as (x)!?html]
+
+<!-- <div id="userInfo">
+    Loading user information...
+</div>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '${api}/env/current-user', // 替换为实际的API URL
+            type: 'GET',
+            success: function (response) {
+                var displayText = 'Username: ' + response.username; // 假设响应中包含用户名
+                $('#userInfo').text(displayText);
+            },
+            error: function () {
+                $('#userInfo').text('${api}/env/current-user');
+            }
+        });
+    });
+</script> -->
+
+
+
+
+<br>
+<br>
+
+
+<div class="card">
+    <div class="card-footer py-3 border-0" style="background-color: #f1e2c9c9;">
+
+        <form id="commentsForm">
+            <div id="userCommentSection" class="d-flex flex-start w-100">
+                <img id="userAvatar" class="rounded-circle shadow-1-strong me-3"
+                    src="https://b0.bdstatic.com/0df6c8c7f109aa7b67e7cb15e6f8d025.jpg@h_1280" alt="avatar" width="40"
+                    height="40" style="display:none;" />
+                <div data-mdb-input-init class="form-outline w-100">
+                    <textarea name="text" class="form-control" id="textAreaExample" rows="4"
+                        style="background: #fff; resize: none;" maxlength="255" disabled></textarea>
+                    <label class="form-label" for="textAreaExample" id="textTips">发表你的评论吧</label>
+                    <span id="wordCount" style="float: right; margin-right: 10px; margin-top: -30px; font-size: 12px;">0
+                        /
+                        255</span>
+                </div>
+            </div>
+            <div class="float-end mt-2 pt-1">
+                <button type="submit" id="sendcom" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm"
+                    disabled>发送评论</button>
+            </div>
+        </form>
+
+
+        <style>
+            .header-row {
+                display: flex;
+                align-items: center;
+                /* 垂直居中 */
+                justify-content: start;
+                /* 左对齐 */
+                gap: 20px;
+                /* 设置元素之间的间距 */
+            }
+        </style>
+        <!-- <p class="fw-light mb-4 pb-2">Latest Comments section by users</p> -->
+        <div class="header-row">
+            <h4 class="mb-0" style="line-height: 2.3; margin: 0;">&nbsp;评论区&nbsp;</h4>
+            <button type="button" id="sortType" class="btn btn-tertiary" data-mdb-ripple-init
+                data-mdb-ripple-color="light" onclick="changeSortType()"
+                style="color: rgb(80, 101, 150); background-color: #f5fdea34;">最新评论</button>
+        </div>
+
+
+        <!-- <hr class="my-0" />
+        <div class="card-body p-4">
+            <div class="d-flex flex-start">
+                <img class="rounded-circle shadow-1-strong me-3"
+                    src="https://b0.bdstatic.com/0df6c8c7f109aa7b67e7cb15e6f8d025.jpg@h_1280" alt="avatar" width="60"
+                    height="60" />
+                <div>
+                    <h6 class="fw-bold mb-1">Maggie Marsh</h6>
+                    <div class="d-flex align-items-center mb-3">
+                        <p class="mb-0">
+                            March 07, 2021
+                            <span class="badge bg-primary">Pending</span>
+                        </p>
+                    </div>
+                    <p class="mb-0">
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                        Lorem Ipsum has been the industry's standard dummy text ever
+                        since the 1500s, when an unknown printer took a galley of type and
+                        scrambled it.
+                    </p>
+                </div>
+            </div>
+        </div> -->
+        [#if user??]
+            [#assign nowUid = user.id /]
+        [#else]
+            [#assign nowUid = -1 /]
+        [/#if]
+
+        <div id="sortRecommend" style="display:none;">
+            [@CommentsPage articleid=article.id userid=nowUid orderBy='positiveLevel_desc'; list]
+            [#include 'inc_extr_commpage.html' /]
+            [/@CommentsPage]
+        </div>
+        <div id="sortLatest" style="display:none;">
+            [@CommentsPage articleid=article.id userid=nowUid orderBy='created_desc'; list]
+            [#include 'inc_extr_commpage.html' /]
+            [/@CommentsPage]
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/5.0.0/mdb.min.js"></script>
+
+
+
+<script>
+    var sortBy = "Latest";
+    $(document).ready(function () {
+        if (sortBy === "Latest") {
+            document.getElementById('sortLatest').style.display = 'block'; 
+            document.getElementById('sortRecommend').style.display = 'none';   
+            document.getElementById('sortType').innerHTML  = '最新评论';  
+        }
+        $.ajax({
+            url: '${api}/env/current-user', // 替换为实际的API URL
+            type: 'GET',
+            success: function (response) {
+                if (response.username) {
+                    $('#userAvatar').show(); // 显示头像
+                    $('#textAreaExample').removeAttr('disabled'); // 使文本框可编辑
+                    $('#textTips').text('发表你的评论吧'); // 更新label文本
+                    $('#sendcom').removeAttr('disabled'); // 使按钮可点击
+                    var imgElement = document.getElementById('userAvatar');
+                    imgElement.src = response.avatar;
+                } else {
+                    $('#textAreaExample').val(''); // 清空textarea
+                    $('#textAreaExample').attr('disabled', 'disabled'); // 禁用文本框
+                    $('#textTips').text('登录后可评论'); // 设置label提示文字
+                    $('#sendcom').attr('disabled', 'disabled'); // 禁用按钮
+                }
+            },
+            error: function () {
+
+            }
+        });
+    });
+
+    function changeSortType(){
+        if (sortBy === "Latest") sortBy = "Recommend";
+        else sortBy = "Latest";
+
+        if (sortBy === "Latest") {
+            document.getElementById('sortLatest').style.display = 'block'; 
+            document.getElementById('sortRecommend').style.display = 'none';   
+            document.getElementById('sortType').innerHTML  = '最新评论';  
+        } else {
+            document.getElementById('sortLatest').style.display = 'none'; 
+            document.getElementById('sortRecommend').style.display = 'block';   
+            document.getElementById('sortType').innerHTML  = '推荐评论';            
+        }
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const textArea = document.getElementById('textAreaExample');
+        const wordCount = document.getElementById('wordCount');
+
+        textArea.addEventListener('input', function (event) {
+            const text = textArea.value;
+            const numChars = text.length;
+            const numLines = text.split(/\r*\n/).length;
+
+            // 更新字数统计
+            wordCount.textContent = numChars + ' / 255';
+
+            // 检查字数限制
+            if (numChars >= 255) {
+                textArea.value = text.substring(0, 255);
+                event.preventDefault();
+            }
+
+            // 检查行数限制
+            if (numLines >= 4 && event.inputType === 'insertLineBreak') {
+                textArea.value = text.replace(/\r?\n$/, '');
+                event.preventDefault();
+            }
+        });
+    });
+
+</script>
+
+
+
+
+<script>
+    function escapeHtml(text) {
+        return text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;")
+            .replace(/\n/g, '<br>');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+        document.getElementById('commentsForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+            let text = document.getElementById('textAreaExample').value;
+            text = escapeHtml(text);
+
+            const data = {
+                userId: "${user.id}",
+                text: text,
+                articleId: "${article.id}"
+            };
+
+            fetch('${api}/comments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [csrfHeader]: csrfToken
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.status);
+                    if (data.status == -1) {
+                        console.error('Failure:', data.message);
+                        showAlert('操作失败: ' + data.message);
+                        history.go(0);
+                    } else {
+                        console.log('Success:', data);
+                        showSuccess('评论提交成功!');
+                        history.go(0);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    showAlert('提交失败，请检查网络或联系管理员');
+                });
+        });
+    });
+</script>
+
+[#include 'inc_message_box.html'/]
+
+[/#escape]

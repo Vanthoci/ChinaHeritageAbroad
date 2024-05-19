@@ -1,0 +1,39 @@
+# Eclipse project files
+.classpath
+.project
+/.settings
+
+# IntelliJ IDEA project files
+*.iml
+/.idea
+
+# JS
+/node_modules
+
+# Liquibase
+/liquibase/ujcms-db-docs
+/liquibase/temp-diff.yaml
+/liquibase/temp-changelog.yaml
+
+# Others
+/target
+/logs
+
+# Lucene
+/src/main/webapp/WEB-INF/lucene
+/src/main/webapp/WEB-INF/lucene_test
+
+# Backup
+/src/main/webapp/WEB-INF/backup
+
+# Uploads
+/src/main/webapp/uploads_test
+
+# Static HTML file
+/src/main/webapp/articles
+/src/main/webapp/channels
+/src/main/webapp/index.html
+
+# License
+/src/main/resources/license
+

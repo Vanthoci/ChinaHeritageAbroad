@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.ujcms</groupId>
+    <artifactId>ujcms</artifactId>
+    <version>9.1.1</version>
+    <packaging>${project.packaging}</packaging>
+
+    <name>UJCMS</name>
+    <description>
+        UJCMS是基于Java的CMS网站内容系统。使用spring-boot2、mybatis、freemarker、vite、vue3、element-plus、tailwind-css等技术开发。
+    </description>
+    <url>https://www.ujcms.com</url>
+    <inceptionYear>2021-2024</inceptionYear>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.18</version>
+    </parent>
+    <properties>
+        <!-- mybatis-spring-boot-starter 2.0 以上版本 会引用 MyBatis 3.5 以上版本，导致OffsetDateTime出错。该问题与MySQL驱动有关，MySQL8.0.23驱动已解决这个问题。-->
+        <!-- 相关参考资料：https://blog.csdn.net/zjcsuct/article/details/107754870 -->
+        <mybatis-spring-boot-starter.version>2.3.2</mybatis-spring-boot-starter.version>
+        <pagehelper-spring-boot-starter.version>2.1.0</pagehelper-spring-boot-starter.version>
+        <spring-boot-starter-mobile.version>1.5.22.RELEASE</spring-boot-starter-mobile.version>
+        <!-- 工作流引擎 -->
+        <flowable-spring-boot-starter>6.7.2</flowable-spring-boot-starter>
+        <!-- 全文索引组件 -->
+        <lucene.version>8.11.1</lucene.version>
+        <!-- 全文索引分词器 -->
+        <jcseg-analyzer.version>2.6.3</jcseg-analyzer.version>
+        <!--<elasticsearch.version>7.15.2</elasticsearch.version>-->
+        <!-- freemarker java8 日期组件 -->
+        <freemarker-java8.version>2.0.0</freemarker-java8.version>
+        <!-- 指定liquibase版本，更高版本的liquibase在mysql中非空约束无效 -->
+        <liquibase.version>4.5.0</liquibase.version>
+        <!-- Apache公共基础组件 -->
+        <commons-collections4.version>4.4</commons-collections4.version>
+        <!-- Apache压缩组件 -->
+        <commons-compress.version>1.22</commons-compress.version>
+        <commons-io.version>2.8.0</commons-io.version>
+        <commons-validator.version>1.7</commons-validator.version>
+        <!-- Apache公共网络组件 -->
+        <commons-net.version>3.8.0</commons-net.version>
+        <!-- 字符串相似度组件 -->
+        <java-string-similarity.version>2.0.0</java-string-similarity.version>
+        <!-- HTML解析组件 -->
+        <jsoup.version>1.14.2</jsoup.version>
+        <!-- 加密组件 -->
+        <bcprov-jdk15to18.version>1.71</bcprov-jdk15to18.version>
+        <!-- HTML不安全代码过滤组件 -->
+        <owasp-java-html-sanitizer.version>20211018.2</owasp-java-html-sanitizer.version>
+        <!-- 验证码组件 -->
+        <jcaptcha.version>2.0.0</jcaptcha.version>
+        <!-- 纯 java 图片处理库 -->
+        <thumbnailator.version>0.4.13</thumbnailator.version>
+        <!-- java webp 图片处理库 -->
+        <webp-imageio.version>0.1.6</webp-imageio.version>
+        <!-- GraphicsMagick 原生图片处理库调用组件 -->
+        <im4java.version>1.4.0</im4java.version>
+        <!-- LibreOffice 转换器 -->
+        <jodconverter.version>4.4.2</jodconverter.version>
+        <!-- PDF 类库 -->
+        <pdfbox.version>3.0.0-RC1</pdfbox.version>
+        <!-- Java Audio Video Encoder -->
+        <jave.version>3.3.1</jave.version>
+        <!-- IP定位组件 -->
+        <ip2region.version>2.7.0</ip2region.version>
+        <!-- 用户代理解析组件。分析用户浏览器类型、操作系统等信息 -->
+        <UserAgentUtils.version>1.21</UserAgentUtils.version>
+        <!-- Markdown解析组件 -->
+        <commonmark.version>0.17.1</commonmark.version>
+        <!-- 计算机信息获取组件 -->
+        <oshi-core.version>6.4.2</oshi-core.version>
+        <!-- 阿里云短信组件 -->
+        <dysmsapi20170525.version>2.0.18</dysmsapi20170525.version>
+        <!-- 腾讯云短信组件 -->
+        <tencentcloud-sdk-java.version>3.1.574</tencentcloud-sdk-java.version>
+        <!-- 微信组件 -->
+        <weixin-java-mp.version>4.4.9.B</weixin-java-mp.version>
+        <!-- MinIO对象存储 -->
+        <!-- MinIO-8使用okhttp3-4.8.1，与阿里云短信okhttp3-3.12.13冲突。只能用7.1版本。 -->
+        <minio.version>7.1.4</minio.version>
+        <!-- 腾讯云对象存储 -->
+        <cos_api.version>5.6.63</cos_api.version>
+        <!-- 阿里云对象存储 -->
+        <aliyun-sdk-oss.version>3.13.2</aliyun-sdk-oss.version>
+        <!-- 七牛云对象存储 -->
+        <qiniu-java-sdk.version>7.9.1</qiniu-java-sdk.version>
+        <!-- SpringDoc API文档工具 -->
+        <springdoc-openapi-ui.version>1.6.11</springdoc-openapi-ui.version>
+        <annotations.version>3.0.1</annotations.version>
+        <mybatis-generator-core.version>1.4.0</mybatis-generator-core.version>
+
+        <!-- 达梦 JDBC驱动 -->
+        <DmJdbcDriver18.version>8.1.3.62</DmJdbcDriver18.version>
+        <!-- 人大金仓 JDBC驱动 -->
+        <kingbase8.version>8.6.0</kingbase8.version>
+        <!-- openGauss JDBC驱动 -->
+        <opengauss-jdbc.version>5.0.0</opengauss-jdbc.version>
+        <!-- 瀚高 JDBC驱动 -->
+        <HgdbJdbc.version>6.2.4</HgdbJdbc.version>
+
+        <!-- 此项设置可以让IntelliJ IDEA自动识别Spring Boot工程，可以直接点击右上角运行按钮启动程序 -->
+        <start-class>com.ujcms.cms.Application</start-class>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- Spring AOP框架 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <!-- Spring 安全框架 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+        <!--<dependency>-->
+        <!--    <groupId>org.springframework.security</groupId>-->
+        <!--    <artifactId>spring-security-oauth2-jose</artifactId>-->
+        <!--</dependency>-->
+        <!-- springboot elasticsearch -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+        </dependency>
+        <!-- springboot redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <!-- Spring Session Redis -->
+        <!--<dependency>-->
+        <!--    <groupId>org.springframework.session</groupId>-->
+        <!--    <artifactId>spring-session-data-redis</artifactId>-->
+        <!--</dependency>-->
+        <!-- springboot 缓存 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <!-- springboot 定时任务 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
+        <!-- caffeine 缓存 -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+        <!-- mybatis -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>${mybatis-spring-boot-starter.version}</version>
+        </dependency>
+        <!-- mybatis caffeine 缓存插件 -->
+        <dependency>
+            <groupId>org.mybatis.caches</groupId>
+            <artifactId>mybatis-caffeine</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <!-- mybatis 分页 -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>${pagehelper-spring-boot-starter.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+        </dependency>
+        <!-- springboot freemarker 依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-freemarker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.api.freemarker</groupId>
+            <artifactId>freemarker-java8</artifactId>
+            <version>${freemarker-java8.version}</version>
+        </dependency>
+        <!-- spring boot mail -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <!-- spring boot mobile -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mobile</artifactId>
+            <version>${spring-boot-starter-mobile.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+        <!-- LiquiBase 数据库版本管理组件 -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+        <!-- Flowable 工作流 -->
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-spring-boot-starter-process</artifactId>
+            <version>${flowable-spring-boot-starter}</version>
+        </dependency>
+        <!-- jcseg 中文分词 -->
+        <dependency>
+            <groupId>org.lionsoul</groupId>
+            <artifactId>jcseg-analyzer</artifactId>
+            <version>${jcseg-analyzer.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.lucene</groupId>
+                    <artifactId>lucene-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.lucene</groupId>
+                    <artifactId>lucene-analyzers-common</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>${commons-collections4.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>${commons-compress.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>${commons-net.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>${commons-validator.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>info.debatty</groupId>
+            <artifactId>java-string-similarity</artifactId>
+            <version>${java-string-similarity.version}</version>
+        </dependency>
+        <!-- 加密库 -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15to18</artifactId>
+            <version>${bcprov-jdk15to18.version}</version>
+        </dependency>
+        <!-- 解析 html 和过滤危险html代码 -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
+            <artifactId>owasp-java-html-sanitizer</artifactId>
+            <version>${owasp-java-html-sanitizer.version}</version>
+        </dependency>
+
+        <!-- 验证码组件 -->
+        <dependency>
+            <groupId>io.leopard.thirdparty</groupId>
+            <artifactId>jcaptcha-core</artifactId>
+            <version>${jcaptcha.version}</version>
+        </dependency>
+        <!-- 纯 java 图片压缩组件 -->
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>${thumbnailator.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.sejda.imageio</groupId>
+            <artifactId>webp-imageio</artifactId>
+            <version>${webp-imageio.version}</version>
+        </dependency>
+        <!-- 调用 gmagick 处理图片的接口库 -->
+        <dependency>
+            <groupId>org.im4java</groupId>
+            <artifactId>im4java</artifactId>
+            <version>${im4java.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jodconverter</groupId>
+            <artifactId>jodconverter-local</artifactId>
+            <version>${jodconverter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jodconverter</groupId>
+            <artifactId>jodconverter-spring-boot-starter</artifactId>
+            <version>${jodconverter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>${pdfbox.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ws.schild</groupId>
+            <artifactId>jave-all-deps</artifactId>
+            <version>${jave.version}</version>
+        </dependency>
+        <!-- IP 地址库 -->
+        <dependency>
+            <groupId>org.lionsoul</groupId>
+            <artifactId>ip2region</artifactId>
+            <version>${ip2region.version}</version>
+        </dependency>
+        <!-- 浏览器UserAgent识别组件 -->
+        <dependency>
+            <groupId>eu.bitwalker</groupId>
+            <artifactId>UserAgentUtils</artifactId>
+            <version>${UserAgentUtils.version}</version>
+        </dependency>
+        <!-- Markdown解析组件 -->
+        <dependency>
+            <groupId>org.commonmark</groupId>
+            <artifactId>commonmark</artifactId>
+            <version>${commonmark.version}</version>
+        </dependency>
+        <!-- 计算机信息获取组件 -->
+        <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
+            <version>${oshi-core.version}</version>
+        </dependency>
+        <!-- 阿里云短信组件 -->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>dysmsapi20170525</artifactId>
+            <version>${dysmsapi20170525.version}</version>
+            <exclusions>
+                <!-- bcpkix-jdk15on 版本太低，使用 bcpkix-jdk15to18 -->
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcpkix-jdk15on</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk15to18</artifactId>
+            <version>${bcprov-jdk15to18.version}</version>
+        </dependency>
+        <!-- 腾讯云短信组件 -->
+        <dependency>
+            <groupId>com.tencentcloudapi</groupId>
+            <artifactId>tencentcloud-sdk-java</artifactId>
+            <version>${tencentcloud-sdk-java.version}</version>
+        </dependency>
+        <!-- 微信组件 -->
+        <!--<dependency>-->
+        <!--    <groupId>com.github.binarywang</groupId>-->
+        <!--    <artifactId>weixin-java-mp</artifactId>-->
+        <!--    <version>${weixin-java-mp.version}</version>-->
+        <!--</dependency>-->
+        <!-- MinIO 对象存储 -->
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>${minio.version}</version>
+            <exclusions>
+                <!--已包含bcprov-jdk15to18-->
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15on</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- 阿里短信(okhttp3 3.12.13)、腾讯短信(okhttp 2.5.0)、MinIO-8(okhttp3 4.8.1)、MinIO-7(okhttp3 3.14.9)都需要用到 okhttp3，版本需要保存稳定 -->
+        <!-- 如果使用okhttp3的4.x版本，会导致阿里短信发送失败，这里使用3.x版本 -->
+        <!-- 如果使用okhttp3的3.x版本，MinIO-8.x会报错，只能用MinIO-7.1 -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>3.14.9</version>
+        </dependency>
+
+        <!-- 腾讯云对象存储 -->
+        <!--<dependency>-->
+        <!--    <groupId>com.qcloud</groupId>-->
+        <!--    <artifactId>cos_api</artifactId>-->
+        <!--    <version>${cos_api.version}</version>-->
+        <!--    <exclusions>-->
+        <!--        <exclusion>-->
+        <!--            <groupId>org.slf4j</groupId>-->
+        <!--            <artifactId>slf4j-log4j12</artifactId>-->
+        <!--        </exclusion>-->
+        <!--        <exclusion>-->
+        <!--            <groupId>log4j</groupId>-->
+        <!--            <artifactId>log4j</artifactId>-->
+        <!--        </exclusion>-->
+        <!--    </exclusions>-->
+        <!--</dependency>-->
+        <!-- 七牛云对象存储 -->
+        <!--<dependency>-->
+        <!--    <groupId>com.qiniu</groupId>-->
+        <!--    <artifactId>qiniu-java-sdk</artifactId>-->
+        <!--    <version>${qiniu-java-sdk.version}</version>-->
+        <!--</dependency>-->
+        <!-- 阿里云对象存储 -->
+        <!--<dependency>-->
+        <!--    <groupId>com.aliyun.oss</groupId>-->
+        <!--    <artifactId>aliyun-sdk-oss</artifactId>-->
+        <!--    <version>${aliyun-sdk-oss.version}</version>-->
+        <!--</dependency>-->
+
+        <!-- SpringDoc -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc-openapi-ui.version}</version>
+        </dependency>
+        <!-- SpringDoc 将 javadoc 注释转为 swagger 注释。可以代替 @Operation @Schema(只作用于属性，方法无效)，@return 解析为 @Operation response -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-javadoc</artifactId>
+            <version>${springdoc-openapi-ui.version}</version>
+        </dependency>
+        <!-- 防止出现找不到javax.annotation.meta.When的类文件的问题 -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>annotations</artifactId>
+            <version>${annotations.version}</version>
+        </dependency>
+
+        <!-- 商业版要安装ujcms-ep-xxx.jar包，否则会失去商业版功能，变成普通版本。安装方法请参考 lib/readme.md 文件。注意：此项配置的 scope 不可改成 system，否则打包时不会包含这个jar文件，导致失去商业版功能 -->
+        <!-- ujcms-enterprise
+        <dependency>
+            <groupId>com.ujcms</groupId>
+            <artifactId>ujcms-ep-r1</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        -->
+
+        <!--<dependency>-->
+        <!--    <groupId>com.h2database</groupId>-->
+        <!--    <artifactId>h2</artifactId>-->
+        <!--    <scope>runtime</scope>-->
+        <!--</dependency>-->
+        <!-- JDBC 驱动 -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dameng</groupId>
+            <artifactId>DmJdbcDriver18</artifactId>
+            <version>${DmJdbcDriver18.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- openGauss 驱动，需将 postgresql 原版驱动删除 -->
+        <!--<dependency>-->
+        <!--    <groupId>org.opengauss</groupId>-->
+        <!--    <artifactId>opengauss-jdbc</artifactId>-->
+        <!--    <version>${opengauss-jdbc.version}</version>-->
+        <!--    <scope>runtime</scope>-->
+        <!--</dependency>-->
+        <!-- 瀚高数据库 驱动 -->
+        <!--<dependency>-->
+        <!--    <groupId>com.highgo</groupId>-->
+        <!--    <artifactId>HgdbJdbc</artifactId>-->
+        <!--    <version>${HgdbJdbc.version}</version>-->
+        <!--    <scope>runtime</scope>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+        <!--    <groupId>cn.hutool</groupId>-->
+        <!--    <artifactId>hutool-all</artifactId>-->
+        <!--    <version>5.8.10</version>-->
+        <!--</dependency>-->
+
+        <!-- 测试 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- 使用 @ConfigurationProperties 注解时，可以生成配置文件，让开发工具识别配置项 -->
+        <!-- https://docs.spring.io/spring-boot/docs/2.4.3/reference/htmlsingle/#configuration-metadata-annotation-processor -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- 开发模式工具。开发模式下自动取消模板缓存、修改class后自动重启等功能 -->
+        <!-- https://docs.spring.io/spring-boot/docs/2.4.3/reference/htmlsingle/#using-boot-devtools -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis.generator</groupId>
+            <artifactId>mybatis-generator-core</artifactId>
+            <version>${mybatis-generator-core.version}</version>
+            <scope>test</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <profiles>
+        <profile>
+            <id>jar</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <project.packaging>jar</project.packaging>
+            </properties>
+        </profile>
+        <profile>
+            <id>war</id>
+            <properties>
+                <project.packaging>war</project.packaging>
+            </properties>
+            <dependencies>
+                <!-- 打包成war需要设置scope为provided -->
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>com.github.therapi</groupId>
+                            <artifactId>therapi-runtime-javadoc-scribe</artifactId>
+                            <version>0.15.0</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <!-- liquibase 插件 -->
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>${liquibase.version}</version>
+                <configuration>
+                    <changeLogFile>/db/changelog/db.changelog-master.yaml</changeLogFile>
+                    <url>jdbc:mysql://localhost:3306/ujcms?serverTimezone=Asia/Shanghai</url>
+                    <username>ujcms</username>
+                    <password>password</password>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.mysql</groupId>
+                        <artifactId>mysql-connector-j</artifactId>
+                        <version>${mysql.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <repositories>
+        <repository>
+            <id>aliyun-repos</id>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>aliyun-repos</id>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+    
+</project>

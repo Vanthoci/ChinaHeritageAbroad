@@ -1,0 +1,33 @@
+[#escape x as (x)!?html]
+[#if list.content?size lt 1]
+<hr class="my-0" />
+<br>
+<p> 这里空空如也，快来评论吧！</p>
+[/#if]
+
+[#list list.content as bean]
+<hr class="my-0" />
+<div class="card-body p-4">
+    <div class="d-flex flex-start">
+        <img class="rounded-circle shadow-1-strong me-3" src="${bean.avatar}" alt="avatar" width="60"
+            height="60" />
+        <div>
+            <h6 class="fw-bold mb-1">${bean.username}</h6>
+            <div class="d-flex align-items-center mb-3">
+                <p class="mb-0">
+                    ${bean.created?replace("T", " ")?substring(0, 19)}
+                    [#if bean.status == 0]
+                    <span class="badge bg-success">已过审</span>
+                    [#elseif bean.status == 1]
+                    <span class="badge bg-primary">审核中</span>
+                    [#elseif bean.status == 2]
+                    <span class="badge bg-danger">未过审</span>
+                    [/#if]
+                </p>
+            </div>
+            <p class="mb-0">[#noescape]${bean.text}[/#noescape]</p>
+        </div>
+    </div>
+</div>
+[/#list]
+[/#escape]

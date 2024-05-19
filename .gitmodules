@@ -1,0 +1,3 @@
+[submodule "ContentManageSystem/ContentManageSystem/cp"]
+	path = ContentManageSystem/ContentManageSystem/cp
+	url = https://github.com/Vanthoci/cms

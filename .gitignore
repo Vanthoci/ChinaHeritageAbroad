@@ -1,6 +1,46 @@
-node_modules
-.DS_Store
-.history
-dist
-dist-ssr
+ContentManageSystem/cp/node_modules
+ContentManageSystem/cp/.DS_Store
+ContentManageSystem/cp/.history
+ContentManageSystem/cp/dist
+ContentManageSystem/cp/dist-ssr
 *.local
+
+# Eclipse project files
+WebServiceSystem/kss/.classpath
+WebServiceSystem/kss/.project
+WebServiceSystem/kss/.settings
+
+# IntelliJ IDEA project files
+WebServiceSystem/kss/*.iml
+WebServiceSystem/kss/.idea
+
+# JS
+WebServiceSystem/kss/node_modules
+
+# Liquibase
+WebServiceSystem/kss/liquibase/ujcms-db-docs
+WebServiceSystem/kss/liquibase/temp-diff.yaml
+WebServiceSystem/kss/liquibase/temp-changelog.yaml
+
+# Others
+WebServiceSystem/kss/target
+WebServiceSystem/kss/logs
+
+# Lucene
+WebServiceSystem/kss/src/main/webapp/WEB-INF/lucene
+WebServiceSystem/kss/src/main/webapp/WEB-INF/lucene_test
+
+# Backup
+WebServiceSystem/kss/src/main/webapp/WEB-INF/backup
+
+# Uploads
+WebServiceSystem/kss/src/main/webapp/uploads_test
+
+# Static HTML file
+WebServiceSystem/kss/src/main/webapp/articles
+WebServiceSystem/kss/src/main/webapp/channels
+WebServiceSystem/kss/src/main/webapp/index.html
+
+# License
+WebServiceSystem/kss/src/main/resources/license
+

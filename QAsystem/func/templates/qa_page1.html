@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博览通</title>
+    <link rel="stylesheet" href="{% static 'chatUI.css' %}">
+</head>
+<body>
+    <div class="chatui">
+        <header class="chatui-header">
+            <h1>博览通</h1>
+
+        </header>
+
+        <div class="chatui-chat">
+            {% for message in message_history %}
+                <div class="msg {% if message.role == 'user' %}right-msg{% else %}left-msg{% endif %}">
+                    <div class="msg-bubble">
+                        {{ message.content }}
+                    </div>
+                </div>
+            {% empty %}
+                 <div class="msg left-msg">
+                    <div class="msg-bubble">我是博览通，专门为您提供有关各种文物和艺术品的详细信息。在博物馆的世界里，每一件藏品都有自己独特的故事和历史背景，从古代瓷器到现代艺术作品，从中国的绘画到雕塑，每一件都是文化遗产的一部分。如果你对历史文物有特别的兴趣或者有任何疑问，都可以随时向我提问。比如，你可以问“元青花云龙纹高足杯来自哪个博物馆？”或者“白瓷横梁鸡冠壶的年代是什么？”</div>
+                    </div>
+            {% endfor %}
+        </div>
+
+        <div class="chatui-inputarea">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <input type="text" class="chatui-input" name="question" placeholder="请输入您的问题..." required>
+              
+                <button type="submit" class="chatui-send-btn"></button>
+                <button type="button" class="chatui-reset-btn" onclick="clearHistory()"></button>
+                
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function clearHistory() {
+            const csrftoken = getCookie('csrftoken');
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '';
+
+            const hiddenField = document.createElement('input');
+            hiddenField.type = 'hidden';
+            hiddenField.name = 'csrfmiddlewaretoken';
+            hiddenField.value = csrftoken;
+            form.appendChild(hiddenField);
+
+            const actionField = document.createElement('input');
+            actionField.type = 'hidden';
+            actionField.name = 'action';
+            actionField.value = 'clear_history';
+            form.appendChild(actionField);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
+</body>
+</html>

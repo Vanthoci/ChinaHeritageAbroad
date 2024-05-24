@@ -1,0 +1,174 @@
+body {
+    background-image: url('img/bgp.webp');
+    background-size: cover;
+ 
+    background-position: center;
+ 
+}
+.chatui {
+    display: flex;
+    position: relative;
+    flex-flow: column wrap;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 867px;
+    margin: 25px auto; /* Ce nter the chat UI */
+    height: 600px;
+    border: 2px solid #ddd;
+    background-color:  #e8e8eb;
+    border-radius: 10px; /* 所有角的半径为10px */
+}
+
+.chatui-header {
+    display: flex;
+    justify-content: space-between;
+    background-color:  #e8e8eb;
+    padding: 10px;
+    border-bottom: 2px solid #ddd;
+    border-radius: 10px;
+    color: #666;
+}
+
+.chatui-chat {
+    flex: 1;
+    overflow-y: auto;
+    font-size: large;
+    padding: 10px;
+    background-color:  #e8e8eb;
+    border-radius: 10px; 
+}
+
+.chatui-chat::-webkit-scrollbar {
+    border-radius: 10px; 
+    width: 6px;
+}
+
+.chatui-chat::-webkit-scrollbar-track {
+    background:  #e8e8eb;
+}
+
+.chatui-chat::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+.chatui-chat::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.msg {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 10px;
+    font-family: 楷体;
+  
+    font-weight: 500;
+    line-height: 1.5;
+    
+}
+
+.msg:last-of-type {
+    margin: 0;
+}
+
+.msg-bubble {
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    padding: 16px;
+    margin: 5px auto;
+    width: calc(100% - 20px);
+    box-sizing: border-box;
+    color: black;
+    border: none;
+    font-size: medium;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.left-msg .msg-bubble {
+    background-color: #ffffff;
+    color: #0c0c0c;
+}
+
+.right-msg .msg-bubble {
+    background-color: #2a8ff4;
+    color: #f6f4f4;
+}
+.chatui-inputarea {
+    display: flex;
+    position: relative;
+    flex-direction: row; 
+    padding: 10px;
+    width: 100%;
+    height: 60px;
+    border-top: 2px solid #ddd;
+    background-color: #e8e8eb;
+    align-items: center;/* Ensure vertical alignment */
+    justify-content: flex-end; /* Adjust the spacing between elements */
+    border-radius: 10px; /* 所有角的半径为10px */
+    align-items: center; /* 子容器在交叉轴上居中对齐 */
+}
+
+
+.chatui-input {
+    /* Allows the input box to take up more space */
+    flex-grow: 1;
+    background-color:  #e9e9e9;
+    font-size: medium;
+    border-color: #a19f9f;
+    color: #090909; /* Set the text color */
+     /* Uniform padding */
+    height: 40px; /* Increased height */
+    width:750px;
+    margin-top: 0%;
+    border-radius: 10px; /* Added border radius */
+    margin-right: 12px;
+    margin-bottom: 15px;
+    position: relative;
+    top: -17px;
+}
+.chatui-input:focus{
+    border-color: #a19f9f;
+    font-size: medium;
+    background-color: #c6c6c6;
+}
+
+.chatui-send-btn {
+    margin-top: 26px;
+    background-color:transparent;
+    cursor: pointer;
+    background-image: url('img/plane.png');
+    background-repeat: no-repeat;
+    padding-top: 50px;
+    background-position: center;
+    width: 40px;
+    height: 40px; /* Set height to make it square */
+    background-size: 20px 20px;
+    align-items: center;
+    border-width: 0;
+    justify-content: center;
+    border-radius: 10px; /* 所有角的半径为10px */
+   
+    
+}
+
+.chatui-reset-btn {padding-top: 50px;
+    /* Push the button to the right */
+    background-color:transparent;
+    cursor: pointer;
+    background-image: url('img/reset.png');
+    filter: grayscale(100%); 
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 40px;
+    height: 40px; /* Set height to make it square */
+    background-size: 20px 20px;
+    border-width: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px; /* 所有角的半径为10px */
+    
+}
+
+.chatui-reset-btn:hover, .chatui-send-btn:hover {
+    background-color: #d3d8d5;
+}

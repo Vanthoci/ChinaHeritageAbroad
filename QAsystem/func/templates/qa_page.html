@@ -1,0 +1,217 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博览通</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'chatUI.css' %}">
+    <style>
+        .backdrop-filter {
+            backdrop-filter: blur(10px);
+        }
+
+        .msg {
+            font-family: 'KaiTi', '楷体', serif;
+        }
+    </style>
+
+</head>
+<script>
+    // 检查 sessionStorage 中是否有 'hasRefreshed' 标记
+    if (!sessionStorage.getItem('hasRefreshed')) {
+        // 如果没有，设置标记并刷新页面
+        sessionStorage.setItem('hasRefreshed', 'true');
+        location.reload();
+    } else {
+        // 如果有，移除标记，防止无限刷新
+        sessionStorage.removeItem('hasRefreshed');
+    }
+</script>
+
+<body class="bg-cover bg-center">
+    <div class="max-w-4xl mx-auto mt-8 p-6 bg-white bg-opacity-75 backdrop-filter rounded-lg shadow-lg">
+        <header class="flex justify-between items-center p-4 border-b border-gray-300">
+            <h1 class="text-xl font-bold text-gray-700">博览通</h1>
+        </header>
+
+
+
+        <div id="chat-container" class="flex flex-col space-y-4 p-4 overflow-y-auto h-96">
+            <div class="flex justify-start" style="visibility: visible;" id="helper">
+                <div class="msg left-msg">
+                    <div class="msg-bubble">
+                        我是辽宁省博物馆的博览通，专门为您提供有关各种文物和艺术品的详细信息。
+                        在辽宁省博物馆的世界里，每一件藏品都有自己独特的故事和历史背景，
+                        从古代瓷器到现代艺术作品，从中国的绘画到雕塑，每一件都是文化遗产的一部分。
+                        如果你对历史文物有特别的兴趣或者有任何疑问，都可以随时向我提问。比如，你可以问
+                        <a href="#" onclick="alert('元青花云龙纹高足杯来自哪个博物馆？')">“元青花云龙纹高足杯来自哪个博物馆？”</a>
+                        或者
+                        <a href="#" onclick="alert('白瓷横梁鸡冠壶的年代是什么？')">“白瓷横梁鸡冠壶的年代是什么？”</a>
+                    </div>
+                </div>
+            </div>
+            <!-- {% for message in message_history %}
+            <div class="flex {% if message.role == 'user' %}justify-end{% else %}justify-start{% endif %}">
+                <div
+                    class="msg bg-white p-4 rounded-lg shadow-md {% if message.role == 'user' %}bg-blue-500 text-white{% else %}bg-gray-100 text-gray-800{% endif %}">
+                    {{ message.content }}
+                </div>
+            </div>
+            {% empty %}
+            <div class="flex justify-start">
+                <div class="msg bg-gray-100 p-4 rounded-lg shadow-md">
+                    我是辽宁省博物馆的博览通，专门为您提供有关各种文物和艺术品的详细信息。在辽宁省博物馆的世界里，每一件藏品都有自己独特的故事和历史背景，从古代瓷器到现代艺术作品，从中国的绘画到雕塑，每一件都是文化遗产的一部分。如果你对历史文物有特别的兴趣或者有任何疑问，都可以随时向我提问。比如，你可以问“元青花云龙纹高足杯来自哪个博物馆？”或者“白瓷横梁鸡冠壶的年代是什么？”
+                </div>
+            </div>
+            {% endfor %} -->
+        </div>
+
+        <div class="flex items-center p-4 border-t border-gray-300">
+            <form id="myform" method="POST" action="" class="flex w-full">
+                {% csrf_token %}
+                <input type="text"
+                    class="flex-grow p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-400"
+                    id="question" name="question" placeholder="请输入您的问题..." required>
+                <button type="submit" class="ml-2 p-2 bg-transparent border-none focus:outline-none">
+                    <img src="{% static 'img/plane.png' %}" alt="Send" class="h-8 w-8">
+                </button>
+                <button type="button" class="ml-2 p-2 bg-transparent border-none focus:outline-none"
+                    onclick="clearHistory()">
+                    <img src="{% static 'img/reset.png' %}" alt="Reset" class="h-8 w-8 filter-grayscale">
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function scrollToBottom() {
+            const chatContainer = document.getElementById('chat-container');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+
+
+        function updateChat(data) {
+            const chatContainer = document.getElementById('chat-container');
+            chatContainer.innerHTML = `
+                <div class="flex justify-start" style="visibility: visible;" id="helper">
+                    <div class="msg left-msg">
+                        <div class="msg-bubble">
+                            我是辽宁省博物馆的博览通，专门为您提供有关各种文物和艺术品的详细信息。
+                            在辽宁省博物馆的世界里，每一件藏品都有自己独特的故事和历史背景，
+                            从古代瓷器到现代艺术作品，从中国的绘画到雕塑，每一件都是文化遗产的一部分。
+                            如果你对历史文物有特别的兴趣或者有任何疑问，都可以随时向我提问。比如，你可以问
+                            <a href="#" onclick="submitCustom('元青花云龙纹高足杯来自哪个博物馆？')" style="color:#00ccff !important;">“元青花云龙纹高足杯来自哪个博物馆？”</a>
+                            或者
+                            <a href="#" onclick="submitCustom('白瓷横梁鸡冠壶的年代是什么？')" style="color:#00ccff !important;">“白瓷横梁鸡冠壶的年代是什么？”</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            data.message_history.forEach(msg => {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'flex ' + (msg.role === 'user' ? 'justify-end' : 'justify-start');
+                const msgContent = document.createElement('div');
+                msgContent.className = 'msg bg-white p-4 rounded-lg shadow-md ' + (msg.role === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-800');
+                msgContent.textContent = msg.content;
+                msgDiv.appendChild(msgContent);
+                chatContainer.appendChild(msgDiv);
+            });
+            scrollToBottom();
+        }
+
+
+        function clearHistory() {
+            const csrftoken = getCookie('csrftoken');
+
+            fetch('', {  // 提交到当前页面的 URL
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({ action: 'clear_history' })  // 发送操作类型
+            })
+                .then(response => response.json())
+                .then(data => {
+                    updateChat(data);  // 清空聊天界面
+                })
+                .catch(error => console.error('Error:', error));
+
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+            form.addEventListener('submit', async function (event) {
+                event.preventDefault();  // 阻止表单默认提交
+                const question = document.getElementById('question').value;
+                await submitCustom(question);
+            });
+        });
+
+        async function submitCustom(question) {
+            const csrftoken = getCookie('csrftoken'); // 从 Cookies 中获取 CSRF token
+            try {
+                const response1 = await fetch('', {  // 提交到当前页面的 URL
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: JSON.stringify({ question: question, action: "update_question" })
+                });
+                const data1 = await response1.json();
+                updateChat(data1);  // 使用服务器响应更新聊天界面
+
+                const response2 = await fetch('', {  // 提交到当前页面的 URL
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: JSON.stringify({ question: question })
+                });
+                const data2 = await response2.json();
+                updateChat(data2);  // 使用服务器响应更新聊天界面
+
+                document.getElementById('question').value = '';
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+
+        window.onload = function () {
+            fetch('?action=load_histroy', { method: 'GET' })
+                .then(response => response.json())
+                .then(data => { updateChat(data); })
+                .catch(error => { console.error('Fetch Error:', error); });
+
+        };
+
+
+    </script>
+
+</body>
+
+</html>
